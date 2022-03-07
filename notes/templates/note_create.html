@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+<form id="form" class="form-group">{% csrf_token %}
+    <ol class="tag breadcrumb justify-content-between">
+        <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 d-flex justify-content-start">
+            <label class="col col-xs-2 vertical-center" for="id_title">Create New Note: </label>
+            {% render_field form.title class+="form-control col col-xs-10" placeholder="Enter title here..." %}
+            {% if form.title.errors %}
+            <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+            <input id="sbmt" class="sbtn form-control btn btn-danger" type="submit" value="Save Note">
+        </div>
+    </ol>
+    {% if form.text.errors %}
+    <div class="is-invalid text-danger">{{ form.text.errors }}</div>
+    {% endif %}
+    {% render_field form.text class+="form-control mt-4" id="editor" %}
+</form>
+
+
+<script>
+    // BalloonEditor
+    BalloonEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+
+
+
+    // Handling ajax form
+    $('#form').on('submit', function(e) {
+        e.preventDefault();
+        text = $("#editor").html();
+        if (text === "<p><br data-cke-filler=\"true\"></p>") {
+            alert("Sorry, you should write something on editor to save it.")
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'note:create' %}",
+                data: {
+                    'title': $("#id_title").val(),
+                    'text': $("#editor").html(),
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data) {
+                    if (!data.error) {
+                        $("#msg").addClass("alert alert-success").html("Your note created successfully, Go on <a href=\'{% url 'note:manage' %}\'>Dashboard</a> to manage it.")
+                        setTimeout(() => {
+                            $("#msg").removeClass("alert alert-success").html('')
+                        }, 5000);
+                    } else {
+                        alert("You cannot create more than 8 notes")
+
+                    }
+                },
+            })
+        }
+    });
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,171 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title>Registration | D-NOTE</title>
+</head>
+
+<body class="full">
+    <div class="msg"></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Login Now</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-group" action="">
+                        <div>
+                            <label for="username">Username: </label>
+                            <input class="form-control" type="text" name="username" id="username">
+                        </div>
+                        <div>
+                            <label for="password">Password</label>
+                            <input class="form-control" type="password" name="password" id="password">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button style="float: left;" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button id="submit" style="float: right;" type="button" class="btn btn-ppurple">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container full my-auto vertical-center">
+        <div class="card col-lg-6 col-md-8 col-sm-12 col-xs-12">
+            <div class="card-header">
+                <h5 class="card-title">Register Your Account</h5>
+            </div>
+            <div class="card-body">
+                <form id="myform" class="form-group" method="POST">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-lg-6 col-md- col-sm-12 col-xs-12">
+                            <label for="id_username">{{form.username.label}} :</label>
+                            {% render_field form.username class+="form-control" %}
+                            <div class="is-invalid">{{form.username.errors}}</div>
+                        </div>
+                        <div class="col-lg-6 col-md- col-sm-12 col-xs-12">
+                            <label for="id_email">{{form.email.label}} :</label>
+                            {% render_field form.email class+="form-control" %}
+                            <div class="is-invalid">{{form.email.errors}}</div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="code col-lg-10 col-md-8 col-sm-8 col-xs-8">
+                                    <label for="id_code">{{form.code.label}} :</label>
+                                    {% render_field form.code class+="form-control" %}
+                                    <div class="is-invalid">{{form.code.errors}}</div>
+                                </div>
+                                <div class="code-btn col-lg-2 col-md-4 col-sm-4 col-xs-4 vertical-center">
+                                    <a id="scode" class="xbtn btn btn-ppurple"><i id="change-icon" class='bx bxs-send'></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label for="id_password">{{form.password.label}} :</label>
+                            {% render_field form.password class+="form-control" %}
+                            <div class="is-invalid">{{form.password.errors}}</div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8">
+                                    <label for="id_password_confirm">{{form.password_confirm.label}} :</label>
+                                    {% render_field form.password_confirm class+="form-control" %}
+                                    <div class="is-invalid">{{form.password_confirm.errors}}</div>
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4 vertical-center">
+                                    <a onclick="showp()" class="xbtn btn btn-secondary"><i class='bx bx-at'></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <p class="card-text"></p>
+                <input form="myform" type="submit" href="{% url 'accounts:register' %}" style="float: right;" class="btn btn-ppurple" value="Register">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    $("#scode").click(() => {
+        var email = $("#id_email").val()
+        if (!email) {
+            alert("Please fill email field")
+        }
+        $("#change-icon").removeClass().addClass('bx bx-check')
+        $("#scode").removeClass("btn-ppurple").addClass("btn-success")
+        $.ajax({
+            url: "{% url 'accounts:scode' %}",
+            type: "GET",
+            data: {
+                'email': email,
+            },
+            success: (r) => {
+                $("#msg").addClass("alert alert-success").html("Email has been sent to your box.")
+                setTimeout(() => {
+                    $("#msg").removeClass("alert alert-success").html('')
+                }, 5000);
+            }
+
+        })
+    })
+
+
+
+    $("#submit").click(() => {
+        $.ajax({
+            url: "{% url 'accounts:login' %}",
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                'username': $("#username").val(),
+                'password': $("#password").val(),
+            },
+            success: (result) => {
+                if (result.success) {
+                    $("#msg").addClass("alert alert-success").html("You have been logged in, you'll be go on your dashboard automatically.")
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-success").html('')
+                    }, 5000);
+                    window.location.href = "{% url 'note:manage' %}"
+                }
+            }
+        })
+    })
+
+
+    function showp() {
+        var x = document.getElementById("id_password");
+        var y = document.getElementById("id_password_confirm")
+        if (x.type === "password" && y.type === "password") {
+            x.type = "text";
+            y.type = "text";
+        } else {
+            x.type = "password";
+            y.type = "password"
+        }
+    }
+</script>
+
+
+</html>

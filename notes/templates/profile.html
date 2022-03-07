@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+<ol class="tag breadcrumb">
+    <li><a href="#">{{profile.username}} Profile</a></li>
+</ol>
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        {% csrf_token %}
+        <div class="col-lg-3 col-md-6 col-sm-10">
+            <label for="id_first_name">first_name: </label>
+            {{profile.first_name}}
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-10">
+            <label for="id_last_name">last_name</label>
+            {{profile.last_name}}
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-10">
+            <label for="id_username">username</label>
+            {{profile.username}}
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-10">
+            <label for="id_email">email</label>
+            {{profile.email}}
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <label for="id_profile_photo">profile_photo</label>
+            {{profile.profile_photo}}
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <label for="id_resume">resume</label>
+            {{profile.resume}}
+        </div>
+        <div class="col-lg-4 col-sm-12 col-md-6">
+            <label for="id_intro_url">intro_url</label>
+            {{profile.intro_url}}
+        </div>
+        <div class="col-lg-4 col-sm-12 col-md-6">
+            <label for="id_phone">phone</label>
+            {{profile.phone}}
+        </div>
+        <div class="col-lg-4 col-sm-12 col-md-6">
+            <label for="id_short_about">short_about</label>
+            {{profile.short_about}}
+        </div>
+        <div class="col-lg-10 col-sm-12 col-md-10">
+            <label for="id_about">about</label>
+            {{profile.about}}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

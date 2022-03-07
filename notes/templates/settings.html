@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+<ol class="tag breadcrumb">
+    <li><a href="#">Settings</a></li>
+</ol>
+
+
+<div class="container-fluid">
+    <form method="POST" class="form-group">
+        <div class="row justify-content-center">
+            {% csrf_token %}
+            <div class="col-lg-3 col-md-6 col-sm-10">
+                <label for="id_first_name">first_name</label>
+                {% render_field form.first_name class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-10">
+                <label for="id_last_name">last_name</label>
+                {% render_field form.last_name class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-10">
+                <label for="id_username">username</label>
+                {% render_field form.username class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-10">
+                <label for="id_email">email</label>
+                {% render_field form.email class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <label for="id_profile_photo">profile_photo</label>
+                {% render_field form.profile_photo class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <label for="id_resume">resume</label>
+                {% render_field form.resume class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-4 col-sm-12 col-md-6">
+                <label for="id_intro_url">intro_url</label>
+                {% render_field form.intro_url class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-4 col-sm-12 col-md-6">
+                <label for="id_phone">phone</label>
+                {% render_field form.phone class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-4 col-sm-12 col-md-6">
+                <label for="id_short_about">short_about</label>
+                {% render_field form.short_about class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+
+            </div>
+            <div class="col-lg-10 col-sm-12 col-md-10">
+                <label for="id_about">about</label>
+                {% render_field form.about class+="form-control" %}
+                <div class="is-invalid text-danger">{{ form.title.errors }}</div>
+            </div>
+        </div>
+        <input style="float: right;" class="btn btn-ppurple" type="submit" value="Save">
+    </form>
+</div>
+
+
+
+{% endblock content %}

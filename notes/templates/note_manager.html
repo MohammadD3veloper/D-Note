@@ -1,0 +1,176 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<ol class="tag breadcrumb d-flex justify-content-between">
+    <li><a class="vertical-center" href="#">Dashboard</a></li>
+    <form class="d-flex" method="POST" action="{% url 'note:manage' %}">{% csrf_token %}<input class="form-control" placeholder="Search..." style="height: 30px;" type="search" name="q"><button type="submit" style="height: 30px;" class="btn btn-success"><i class='bx bx-search-alt'></i></button></form>
+</ol>
+
+<style>
+    .card {
+        margin: 5px 5px 5px 5px;
+    }
+</style>
+
+
+
+<!-- Modal -->
+<div class="md">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Donate Now</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Hello dear user, at first we are really thankful of you
+                        because you choosed our service for yourself, company ...
+                        Right now we are just a startup and we should upgrade ourselves
+                        and like that you need us we need you!
+                        we provide this service to you as free, but our service is limited
+                        because our sources couldnt make your need as well.
+                        These are the limitation of our service:
+                        <ul>
+                            <li>You cannot create more than 8 Notes</li>
+                            <li>You cannnot add more than 10 Notes in your bookmark</li>
+                            <li>If you logout, your account will be delete</li>
+                            <!-- <li></li> -->
+                        </ul>
+                        But you have a choise to remove these limitations
+                        if you donate us we will upgrade our services to make your needs!
+
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <!-- <button style="float: left;" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button> -->
+                    <a href="{% url 'note:donate' %}" style="text-align: center;margin: 0 auto;" type="button" class="btn btn-success">Donate US</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-center">
+    {% for i in notes %}
+    <div id="{{i.uuid}}" class="card col-lg-4 col-md-6 col-sm-10" style="width: 18rem;">
+        {% if i.cover_url %}
+        <img src="{{i.cover_url}}" class="card-img-top" width="100px" height="100px" alt="...">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{i.title}}</h5>
+
+            <div class="d-flex justify-content-between">
+                <small class="text-secondary">By <a href="{{i.author.get_absolute_url}}">{{i.author.username}}</a></small>
+                <div>
+                    {% if not i.public %}
+                    <a onclick="pub('{{i.uuid}}', 'create')" href="#"><i id="{{i.uuid}}-pub" class='bx bx-globe'></i></a>
+                    {% else %}
+                    <a onclick="pub('{{i.uuid}}', 'remove')" href="#"><i id="{{i.uuid}}-pub" class='bx bx-globe text-success'></i></a>
+                    {% endif %}
+                    {% if not i.bookmarked.user == request.user %}
+                    <a onclick="bookmark('{{i.uuid}}', 'create')" href="#"><i id="{{i.uuid}}-book" class='bx bx-bookmark'></i></a>
+                    {% else %}
+                    <a onclick="bookmark('{{i.uuid}}', 'remove')" href="#"><i id="{{i.uuid}}-book" class='bx bxs-bookmark'></i></a>
+                    {% endif %}
+                </div>
+            </div>
+            <a href="{% url 'note:detail' i.uuid %}" class="btn btn-ppurple">View</a>
+            <a href="{% url 'note:update' i.uuid %}" class="btn btn-secondary">Update</a>
+            <a onclick="delete_note('{{i.uuid}}')" class="btn btn-danger">Delete</a>
+
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-bold">There is no any notes in here, lets create once.</p>
+    {% endfor %}
+</div>
+
+
+
+
+
+<script>
+    function delete_note(uuid) {
+        $.ajax({
+            url: "{% url 'note:delete' %}",
+            type: "GET",
+            data: {
+                'uuid': uuid
+            },
+            success: (result) => {
+                if (result.success) {
+                    $("#msg").addClass('alert alert-success').html('The note has been deleted successfully')
+                    // window.location.reload()
+                    $(`#${uuid}`).hide()
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-success").html('')
+                    }, 5000);
+
+                }
+            }
+        })
+    }
+
+    function bookmark(uuid, cr) {
+        $.ajax({
+            url: "{% url 'note:add-bookmark' %}",
+            type: "GET",
+            data: {
+                'uuid': uuid,
+                'cr': cr,
+            },
+            success: (result) => {
+                if (result.create_success) {
+                    $("#msg").addClass('alert alert-success').html('The note has been bookmarked successfully')
+                    // $(`#${uuid}-book`).parent().html(`<a onclick="bookmark(${uuid}, 'remove')" href="#"><i id='${uuid}-book' class='bx bxs-bookmark'></i></a>`)
+                    window.location.reload()
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-success").html('')
+                    }, 5000);
+                } else if (result.remove_success) {
+                    $("#msg").addClass('alert alert-danger').html('The note has been removed from bookmarked notes')
+                    window.location.reload()
+                    // $(`#${uuid}-book`).parent().html(`<a onclick="bookmark(${uuid}, 'create')" href="#"><i id='${uuid}-book' class='bx bx-bookmark'></i></a>`)
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-danger").html('')
+                    }, 5000);
+                }
+            }
+        })
+    }
+
+
+
+    function pub(uuid, cr) {
+        $.ajax({
+            url: "{% url 'note:pub-note' %}",
+            type: "GET",
+            data: {
+                'uuid': uuid,
+                'cr': cr,
+            },
+            success: (result) => {
+                if (result.create_success) {
+                    $("#msg").addClass('alert alert-success').html('The note has been publiced successfully')
+                    window.location.reload()
+                    // $(`#${uuid}-pub`).parent().html(`<a onclick="pub("${uuid}", 'remove')" href="#"><i id="${uuid}-pub" class='bx bx-globe text-success'></i></a>`)
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-success").html('')
+                    }, 5000);
+                } else if (result.remove_success) {
+                    $("#msg").addClass('alert alert-danger').html('The note has been private successfully')
+                    // $(`#${uuid}-pub`).parent().html(`<a onclick="pub("${uuid}", 'create')" href="#"><i id="${uuid}-pub" class='bx bx-globe'></i></a>`)
+                    window.location.reload()
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-danger").html('')
+                    }, 5000);
+                }
+            }
+        })
+    }
+</script>
+{% endblock content %}

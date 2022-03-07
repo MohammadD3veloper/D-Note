@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+<form id="form" method="POST" class="form-group">{% csrf_token %}
+    <ol class="tag breadcrumb justify-content-between">
+        <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 d-flex justify-content-start">
+            <label class="col col-xs-2 vertical-center" for="id_title">Update Note: </label>
+            {% render_field form.title class+="form-control col col-xs-10" placeholder="Enter title here..." %}
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+            <input class="sbtn form-control btn btn-danger" type="submit" value="Save Note">
+        </div>
+    </ol>
+    {% render_field form.text class+="form-control mt-4" id="editor" %}
+</form>
+
+
+<script>
+    // BalloonEditor
+    BalloonEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+
+
+
+    // Handling ajax form
+    $('#form').on('submit', function(e) {
+        e.preventDefault();
+        text = $("#editor").html();
+        if (text === "<p><br data-cke-filler=\"true\"></p>") {
+            alert("Sorry, you should write something on editor to save it.")
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'note:update' note.uuid %}",
+                data: {
+                    'title': $("#id_title").val(),
+                    'text': $("#editor").html(),
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data) {
+                    $("#msg").addClass("alert alert-success").html("Your note updated successfully, Go on <a href=\'{% url 'note:manage' %}\'>Dashboard</a> to manage it.")
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-success").html('')
+                    }, 5000);
+                },
+                failure: function() {}
+            })
+        }
+    });
+</script>
+
+
+
+{% endblock content %}
