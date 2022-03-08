@@ -13,7 +13,7 @@ class User(AbstractUser):
     ip_addr = models.GenericIPAddressField(null=True)
     user_agent = models.CharField(max_length=250, null=True)
     profile_photo = models.ImageField(upload_to=upload_photo_path, blank=True, null=True)
-    phone_regex = RegexValidator(regex='', message='You should enter the correct phone numgber.')
+    phone_regex = RegexValidator(regex='^(0|0098|\+98)9(0[1-5]|[1 3]\d|2[0-2]|98)\d{7}$', message='You should enter the correct phone numgber.')
     phone = models.CharField(max_length=11, validators=[phone_regex], blank=True, null=True)
     short_about = models.CharField(max_length=170)
     about = models.TextField(max_length=400, blank=True, null=True)

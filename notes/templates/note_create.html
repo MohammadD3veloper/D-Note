@@ -19,6 +19,7 @@
     {% if form.text.errors %}
     <div class="is-invalid text-danger">{{ form.text.errors }}</div>
     {% endif %}
+    <small>Select your text and set a style</small>
     {% render_field form.text class+="form-control mt-4" id="editor" %}
 </form>
 

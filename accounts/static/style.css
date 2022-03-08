@@ -19,8 +19,10 @@
 .card {
     float: none;
     margin: 0 auto !important;
-    box-shadow: 0px 0px 999999px 5px #4723D9;
-    /* padding: 10px 10px 10px 10px; */
+    /* box-shadow: 0px 0px 999999px 5px #4723D9;
+     */
+    border: 2px solid #4723D9
+        /* padding: 10px 10px 10px 10px; */
 }
 
 .card-header {
