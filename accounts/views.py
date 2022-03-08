@@ -45,9 +45,9 @@ class Login(generic.View):
 
 def logout(request):
     try:
-        logout(request)
         user = get_user_model().objects.get(pk=request.user.pk)
         user.delete()
+        logout(request)
     except get_user_model().DoesNotExist:
         logout(request)
 

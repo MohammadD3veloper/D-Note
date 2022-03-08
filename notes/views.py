@@ -226,17 +226,22 @@ def pub_note(request):
         cr = request.GET.get("cr")
         uuid = request.GET.get("uuid")
         note = Note.objects.get(uuid=uuid)
-        if cr == "create":
-            note.public = True
-            note.save()
+        if note.author == request.user:
+            if cr == "create":
+                note.public = True
+                note.save()
+                return JsonResponse({
+                    'create_success': True
+                })
+            elif cr == "remove":
+                note.public = False
+                note.save()
+                return JsonResponse({
+                    'remove_success': True
+                })
+        else:
             return JsonResponse({
-                'create_success': True
-            })
-        elif cr == "remove":
-            note.public = False
-            note.save()
-            return JsonResponse({
-                'remove_success': True
+                'error': "You cannot public the note that you arent owned"
             })
 
 

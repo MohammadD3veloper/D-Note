@@ -28,10 +28,12 @@
             <div class="d-flex justify-content-between">
                 <small class="text-secondary">By <a href="{{i.author.get_absolute_url}}">{{i.author.username}}</a></small>
                 <div>
+                    {% if i.author == request.user %}
                     {% if not i.public %}
                     <a onclick="pub('{{i.uuid}}', 'create')" href="#"><i id="{{i.uuid}}-pub" class='bx bx-globe'></i></a>
                     {% else %}
                     <a onclick="pub('{{i.uuid}}', 'remove')" href="#"><i id="{{i.uuid}}-pub" class='bx bx-globe text-success'></i></a>
+                    {% endif %}
                     {% endif %}
                     {% if not i.bookmarked.user == request.user %}
                     <a onclick="bookmark('{{i.uuid}}', 'create')" href="#"><i id="{{i.uuid}}-book" class='bx bx-bookmark'></i></a>
@@ -128,6 +130,11 @@
                     $("#msg").addClass('alert alert-danger').html('The note has been private successfully')
                     // $(`#${uuid}-pub`).parent().html(`<a onclick="pub("${uuid}", 'create')" href="#"><i id="${uuid}-pub" class='bx bx-globe'></i></a>`)
                     window.location.reload()
+                    setTimeout(() => {
+                        $("#msg").removeClass("alert alert-danger").html('')
+                    }, 5000);
+                } else if (result.error) {
+                    $("#msg").addClass('alert alert-danger').html(`${result.error}`)
                     setTimeout(() => {
                         $("#msg").removeClass("alert alert-danger").html('')
                     }, 5000);
