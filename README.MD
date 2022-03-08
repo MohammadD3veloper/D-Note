@@ -1,6 +1,6 @@
 # Full featured note sharing system
 
-**Developed on** [Heroku](https://d-devnote.herokuapp.com)
+**Deployed on** [Heroku](https://d-devnote.herokuapp.com)
 
 Some of Issues are fixing,
 
